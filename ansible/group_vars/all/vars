@@ -1,0 +1,4 @@
+admin: '{{ secret_admin }}'
+ansible_user: '{{ admin }}'
+postgresql_driver: postgresql-42.2.10.jar
+keycloak_root: /opt/keycloak

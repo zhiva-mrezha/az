@@ -1,0 +1,131 @@
+- name: make admin user so we don't use the root user
+  become: yes
+  user:
+    name: '{{admin}}'
+    shell: /bin/bash
+    groups: [sudo]
+    append: yes
+    password: '{{admin_password}}' # necessary otherwise user is locked and we cannot ssh into it
+    update_password: on_create
+
+- name: make sure admin user is authenticated via key
+  become: yes
+  authorized_key:
+    user: '{{ admin }}'
+    key: '{{ item }}'
+  with_file:
+    - files/id_rsa.pub
+
+- name: install java
+  become: yes
+  apt:
+    name:
+      - acl # for running Ansible tasks as non-privileged user
+      - openjdk-8-jre
+
+- name: check whether Keycloak is installed
+  stat:
+    path: '{{ keycloak_root }}'
+  register: keycloak_root_stat
+
+- name: install Keycloak
+  when: not keycloak_root_stat.stat.exists
+  block:
+    - name: fetch Keycloak
+      get_url:
+        url: https://downloads.jboss.org/keycloak/9.0.0/keycloak-9.0.0.tar.gz
+        dest: /tmp/keycloak.tar.gz
+
+    - name: unarchive Keycloak
+      unarchive:
+        src: /tmp/keycloak.tar.gz
+        remote_src: yes
+        dest: /tmp/
+        creates: '{{ keycloak_root }}'
+
+    - name: put Keycloak to place
+      become: yes
+      copy:
+        src: /tmp/keycloak-9.0.0/
+        remote_src: yes
+        dest: '{{ keycloak_root }}'
+        mode: '0740'
+        owner: '{{ admin }}'
+        group: '{{ admin }}'
+
+- name: install postgres
+  become: yes
+  apt: 
+    name: [postgresql, libpq-dev, python-psycopg2]
+
+- name: create database
+  become: yes
+  become_user: postgres
+  postgresql_db: name={{db_name}}
+
+- name: make database user have access to the database
+  become: yes
+  become_user: postgres
+  postgresql_user: db={{db_name}} name={{db_user}} password={{db_password}} priv=ALL
+
+- name: make directory for JDBC Postgresql driver
+  file:
+    name: '{{ keycloak_root }}/modules/system/layers/keycloak/org/postgresql/main'
+    state: directory
+    recurse: yes
+
+- name: put JDBC Postgresql driver in place 1
+  copy:
+    src: 'files/{{ postgresql_driver }}'
+    dest: '{{ keycloak_root }}/modules/system/layers/keycloak/org/postgresql/main/'
+
+- name: put JDBC Postgresql driver in place 2
+  template:
+    src: files/module.xml
+    dest: '{{ keycloak_root }}/modules/system/layers/keycloak/org/postgresql/main/'
+
+- name: configure Keycloak to use Postgresql
+  template:
+    src: files/standalone.xml
+    dest: '{{ keycloak_root }}/standalone/configuration/standalone.xml'
+
+- name: configure Keycloak as a Systemd service
+  become: yes
+  block:
+    - name: create keycloak user
+      user:
+        name: keycloak
+        system: true
+    - name: set directory ownership
+      file:
+        name: '{{ keycloak_root }}'
+        owner: keycloak
+        group: keycloak
+        recurse: yes
+        state: directory
+    - name: copy wildfly configuration
+      copy:
+        src: files/wildfly.conf
+        dest: '{{ keycloak_root }}'
+        owner: keycloak
+        group: keycloak
+      notify: restart keycloak
+    - name: copy keycloak systemd service
+      template:
+        src: files/keycloak.service
+        dest: /etc/systemd/system
+      notify: restart keycloak
+    - name: copy keycloak launch script
+      copy:
+        src: files/launch.sh
+        dest: '{{ keycloak_root }}/bin'
+        owner: keycloak
+        group: keycloak
+        mode: '0744'
+      notify: restart keycloak
+  tags: service
+
+- name: setup nftables
+  import_tasks: nftables.yaml
+  become: yes
+  tags: firewall
