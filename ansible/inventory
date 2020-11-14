@@ -1,5 +1,8 @@
 [all]
-magare3.otselo.eu
+az.otselo.eu
 
 [certificate]
-magare3.otselo.eu
+az.otselo.eu
+
+[server]
+az.otselo.eu

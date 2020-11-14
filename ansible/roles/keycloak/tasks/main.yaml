@@ -1,6 +1,7 @@
 - name: install java
   become: yes
   apt:
+    update_cache: yes
     name:
       - acl # for running Ansible tasks as non-privileged user
       - openjdk-8-jre
@@ -38,7 +39,7 @@
 - name: install postgres
   become: yes
   apt: 
-    name: [postgresql, libpq-dev, python-psycopg2]
+    name: [postgresql, libpq-dev, python3-psycopg2]
 
 - name: create database
   become: yes

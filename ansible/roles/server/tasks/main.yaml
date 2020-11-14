@@ -1,0 +1,27 @@
+- name: make admin user so we don't use the root user
+  become: yes
+  user:
+    name: '{{admin}}'
+    shell: /bin/bash
+    groups: [sudo]
+    append: yes
+    password: '{{admin_password}}' # necessary otherwise user is locked and we cannot ssh into it
+    update_password: on_create
+
+- name: make sure admin user is authenticated via key
+  become: yes
+  authorized_key:
+    user: '{{ admin }}'
+    key: '{{ item }}'
+  with_file:
+    - files/zhiva-mrezha-aws-public.pub
+
+- name: passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%sudo'
+    line: '%sudo ALL = (ALL) NOPASSWD:ALL'
+    validate: 'visudo -cf %s'
+  become: yes
+  become_user: root
