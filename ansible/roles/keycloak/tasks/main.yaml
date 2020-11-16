@@ -16,7 +16,7 @@
   block:
     - name: fetch Keycloak
       get_url:
-        url: https://downloads.jboss.org/keycloak/9.0.0/keycloak-9.0.0.tar.gz
+        url: https://downloads.jboss.org/keycloak/11.0.3/keycloak-11.0.3.tar.gz
         dest: /tmp/keycloak.tar.gz
 
     - name: unarchive Keycloak
@@ -29,7 +29,7 @@
     - name: put Keycloak to place
       become: yes
       copy:
-        src: /tmp/keycloak-9.0.0/
+        src: /tmp/keycloak-11.0.3/
         remote_src: yes
         dest: '{{ keycloak_root }}'
         mode: '0740'
