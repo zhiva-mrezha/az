@@ -8,9 +8,14 @@
     certbot_admin_email: '{{ admin_email }}'
     certbot_certs: 
       - domains:
-          - '{{ domain }}'
+          - '{{ keycloak_domain }}'
+          - '{{ nextcloud_domain }}'
     certbot_create_standalone_stop_services:
       - nginx
+    
+    # Add expand flag 
+    certbot_create_command: >-
+      {{ certbot_script }} certonly --expand --standalone --noninteractive --agree-tos --email {{ cert_item.email | default(certbot_admin_email) }} -d {{ cert_item.domains | join(',') }}
 
   roles:
     - role: geerlingguy.certbot

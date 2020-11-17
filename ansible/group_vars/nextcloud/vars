@@ -1,0 +1,8 @@
+nextcloud_root: /opt/nextcloud
+nextcloud_domain: nextcloud.otselo.eu
+nextcloud_db_name: '{{ vault_nextcloud_db_name }}'
+nextcloud_db_user: '{{ vault_nextcloud_db_user }}'
+nextcloud_db_password:  '{{ vault_nextcloud_db_password }}'
+nextcloud_password_salt:  '{{ vault_nextcloud_password_salt }}'
+nextcloud_secret:  '{{ vault_nextcloud_secret }}'
+nextcloud_instance_id: 'oc7n88rciqlz'

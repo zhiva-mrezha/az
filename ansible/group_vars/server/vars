@@ -1,4 +1,4 @@
 admin_password: '{{vault_admin_password}}'
-domain: 'az.otselo.eu'
+keycloak_domain: 'az.otselo.eu'
 certbot_webroot: '/home/admin'
 admin_email: 'akodzhabashev@gmail.com'
