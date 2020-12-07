@@ -1,0 +1,73 @@
+- name: install requirements
+  become: yes
+  apt:
+    update_cache: yes
+    name:
+      - mariadb-server
+      - python3-pymysql
+      - php-mysqli
+      - php-mysql
+      - php-mbstring
+      - php-net-socket
+      - php-imap
+      - php-gd
+      - php-xml-util
+      - php-bcmath
+
+- name: check whether phpList is installed
+  stat:
+    path: '{{ phplist_root }}'
+  register: phplist_root_stat
+
+- name: install phpList
+  when: not phplist_root_stat.stat.exists
+  vars:
+    VER: 3.5.8
+  block:
+    - name: fetch phpList
+      get_url:
+        url: https://sourceforge.net/projects/phplist/files/phplist/{{VER}}/phplist-{{VER}}.tgz
+        dest: /tmp/phplist.tgz
+
+    - name: unarchive phpList
+      unarchive:
+        src: /tmp/phplist.tgz
+        remote_src: yes
+        dest: /tmp/
+
+    - name: put phpList in place
+      become: yes
+      copy:
+        src: /tmp/phplist-{{VER}}/public_html/lists/
+        remote_src: yes
+        dest: '/opt/phplist'
+        mode: '0740'
+        owner: 'www-data'
+        group: 'www-data'
+    
+    - name: remove index.html
+      become: yes
+      file:
+        name: /opt/phplist/index.html
+        state: absent
+
+- name: create database
+  become: yes
+  mysql_db: 
+    name: '{{ phplist_db_name }}'
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: make database user have access to the database
+  become: yes
+  mysql_user: 
+    priv: '{{phplist_db_name}}.*:ALL'
+    name: '{{phplist_db_user}}'
+    password: '{{phplist_db_password}}'
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: put phpList config in place
+  become: yes
+  become_user: www-data
+  template:
+    src: 'files/config.php'
+    dest: '{{ phplist_root }}/config/'

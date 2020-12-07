@@ -9,6 +9,9 @@
     - role: nextcloud
       tags: nextcloud
 
+    - role: phplist
+      tags: phplist
+
     - role: geerlingguy.nginx
       become: yes
       vars:
@@ -55,7 +58,7 @@
             #error_page: ""
             #access_log: ""
             #error_log: ""
-            error_log: "logs/error.log"
+            error_log: "/var/log/nginx/nextcloud-error.log"
             state: "present"
             filename: "nextcloud.conf"
             extra_parameters: |
@@ -196,4 +199,62 @@
             filename: "nextcloud.80.conf"
             state: "present"
 
+          - listen: "443 ssl"
+            server_name: "{{ phplist_domain }}"
+            error_log: "/var/log/nginx/phplist-error.log"
+            state: "present"
+            filename: "phplist.conf"
+            extra_parameters: |
+              ssl_certificate     /etc/letsencrypt/live/{{ keycloak_domain }}/fullchain.pem;
+              ssl_certificate_key /etc/letsencrypt/live/{{ keycloak_domain }}/privkey.pem;
+
+              # source https://www.nginx.com/resources/wiki/start/topics/recipes/phplist/
+              #
+              root {{ phplist_root }};
+              index index.php;
+              charset utf-8;
+
+              location ~* \.(txt|log|inc)$ {
+                  allow 127.0.0.1;
+                  deny all;
+              }
+
+              location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+                expires max;
+                log_not_found off;
+              }  
+
+              #block phplist config directory
+              location /config {
+                  deny all;
+              }
+
+              location / {
+                  rewrite ^ /index.php$request_uri;
+              }
+
+              #per the phplist .htaccess these are the only public allowed php files
+              location ~* (index\.php|upload\.php|connector\.php|dl\.php|ut\.php|lt\.php|download\.php)$ {
+                     fastcgi_split_path_info ^(.|\.php)(/.+)$;
+
+                     include fastcgi_params; #standar fastcgi config file
+                     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                     fastcgi_intercept_errors on;
+                     fastcgi_pass php-handler;
+              }
+
+
+              #block all other php file access from public
+              location ~ \.php$ {
+                 deny all;
+              }
+
+              
+          - listen: "80"
+            server_name: "{{ phplist_domain }}"
+            return: "301 https://{{ phplist_domain }}$request_uri"
+            filename: "phplist.80.conf"
+            state: "present"
+
       tags: nginx
+

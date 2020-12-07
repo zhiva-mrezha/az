@@ -1,0 +1,5 @@
+phplist_domain: phplist.otselo.eu
+phplist_root: /opt/phplist
+phplist_db_name: '{{ vault_phplist_db_name }}'
+phplist_db_user: '{{ vault_phplist_db_user }}'
+phplist_db_password: '{{ vault_phplist_db_password }}'

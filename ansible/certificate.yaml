@@ -8,6 +8,7 @@
     certbot_admin_email: '{{ admin_email }}'
     certbot_certs: 
       - domains:
+          - '{{ phplist_domain }}'
           - '{{ keycloak_domain }}'
           - '{{ nextcloud_domain }}'
     certbot_create_standalone_stop_services:
