@@ -12,3 +12,4 @@ $phpmailer_smtppassword = '{{ mail_smtppassword }}';
 define("PHPMAILERPORT",'465');
 define("PHPMAILER_SECURE",'ssl');
 define('PHPMAILER_SMTP_DEBUG', 3);
+$language_module = 'bulgarian.inc';
