@@ -3,3 +3,6 @@ phplist_root: /opt/phplist
 phplist_db_name: '{{ vault_phplist_db_name }}'
 phplist_db_user: '{{ vault_phplist_db_user }}'
 phplist_db_password: '{{ vault_phplist_db_password }}'
+mail_host: '{{ vault_mail_host }}'
+mail_user: '{{ vault_mail_user }}'
+mail_password: '{{ vault_mail_password }}'

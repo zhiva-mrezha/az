@@ -77,10 +77,6 @@
                   deny all;
               }
 
-              location / {
-                  rewrite ^ /index.php$request_uri;
-              }
-
               #per the phplist .htaccess these are the only public allowed php files
               location ~* (index\.php|upload\.php|connector\.php|dl\.php|ut\.php|lt\.php|download\.php)$ {
                      fastcgi_split_path_info ^(.|\.php)(/.+)$;
