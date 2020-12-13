@@ -52,25 +52,37 @@
   postgresql_user: db={{ keycloak_db_name }} name={{ keycloak_db_user }} password={{ keycloak_db_password }} priv=ALL
 
 - name: make directory for JDBC Postgresql driver
+  become: yes
   file:
     name: '{{ keycloak_root }}/modules/system/layers/keycloak/org/postgresql/main'
     state: directory
     recurse: yes
+    owner: keycloak
+    group: keycloak
 
 - name: put JDBC Postgresql driver in place 1
+  become: yes
   copy:
-    src: 'files/{{ postgresql_driver }}'
+    src: files/{{ postgresql_driver }}
     dest: '{{ keycloak_root }}/modules/system/layers/keycloak/org/postgresql/main/'
+    owner: keycloak
+    group: keycloak
 
 - name: put JDBC Postgresql driver in place 2
+  become: yes
   template:
     src: files/module.xml
     dest: '{{ keycloak_root }}/modules/system/layers/keycloak/org/postgresql/main/'
+    owner: keycloak
+    group: keycloak
 
 - name: configure Keycloak to use Postgresql
+  become: yes
   template:
     src: files/standalone.xml
     dest: '{{ keycloak_root }}/standalone/configuration/standalone.xml'
+    owner: keycloak
+    group: keycloak
 
 - name: configure Keycloak as a Systemd service
   become: yes

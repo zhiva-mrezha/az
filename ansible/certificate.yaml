@@ -9,9 +9,8 @@
     # За да добавиш домейн, сложи го на първо място в списъка domains
     certbot_certs:
       - domains:
-          - '{{ domain }}'
-          - '{{ phplist_domain }}'
           - '{{ keycloak_domain }}'
+          - '{{ phplist_domain }}'
     certbot_create_standalone_stop_services:
       - nginx
 

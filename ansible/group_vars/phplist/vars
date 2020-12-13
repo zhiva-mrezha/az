@@ -1,4 +1,4 @@
-phplist_domain: phplist.otselo.eu
+phplist_domain: 7.zhiva.be
 phplist_root: /opt/phplist
 phplist_db_name: '{{ vault_phplist_db_name }}'
 phplist_db_user: '{{ vault_phplist_db_user }}'

@@ -19,7 +19,7 @@
             #keepalive: 16 # optional
             servers: {
               "127.0.0.1:9000",
-              unix: /var/run/php/php7.4-fpm.sock
+              unix:/var/run/php/php7.4-fpm.sock
             }
         nginx_vhosts:
           - listen: "443 ssl"
