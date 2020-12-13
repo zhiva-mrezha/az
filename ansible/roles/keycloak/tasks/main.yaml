@@ -38,18 +38,18 @@
 
 - name: install postgres
   become: yes
-  apt: 
+  apt:
     name: [postgresql, libpq-dev, python3-psycopg2]
 
 - name: create database
   become: yes
   become_user: postgres
-  postgresql_db: name={{db_name}}
+  postgresql_db: name={{ keycloak_db_name }}
 
 - name: make database user have access to the database
   become: yes
   become_user: postgres
-  postgresql_user: db={{db_name}} name={{db_user}} password={{db_password}} priv=ALL
+  postgresql_user: db={{ keycloak_db_name }} name={{ keycloak_db_user }} password={{ keycloak_db_password }} priv=ALL
 
 - name: make directory for JDBC Postgresql driver
   file:

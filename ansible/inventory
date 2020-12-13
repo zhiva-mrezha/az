@@ -1,14 +1,14 @@
 [all]
-az.otselo.eu
+az.zhiva.be
+
+[keycloak]
+az.zhiva.be
 
 [certificate]
-az.otselo.eu
+az.zhiva.be
 
 [server]
-az.otselo.eu
-
-[nextcloud]
-az.otselo.eu
+az.zhiva.be
 
 [phplist]
-az.otselo.eu
+7.zhiva.be

@@ -6,15 +6,16 @@
     certbot_create_if_missing: yes
     certbot_create_method: standalone
     certbot_admin_email: '{{ admin_email }}'
-    certbot_certs: 
+    # За да добавиш домейн, сложи го на първо място в списъка domains
+    certbot_certs:
       - domains:
+          - '{{ domain }}'
           - '{{ phplist_domain }}'
           - '{{ keycloak_domain }}'
-          - '{{ nextcloud_domain }}'
     certbot_create_standalone_stop_services:
       - nginx
-    
-    # Add expand flag 
+
+    # Add expand flag
     certbot_create_command: >-
       {{ certbot_script }} certonly --expand --standalone --noninteractive --agree-tos --email {{ cert_item.email | default(certbot_admin_email) }} -d {{ cert_item.domains | join(',') }}
 
@@ -27,4 +28,3 @@
       become: yes
       file:
         name: '{{ certbot_webroot }}'
-

@@ -1,0 +1,6 @@
+keycloak_root: /opt/keycloak
+keycloak_domain: 'az.zhiva.be'
+postgresql_driver: postgresql-42.2.10.jar
+keycloak_db_user: '{{ vault_keycloak_db_user }}'
+keycloak_db_password: '{{ vault_keycloak_db_password }}'
+keycloak_db_name: '{{ vault_keycloak_db_name }}'

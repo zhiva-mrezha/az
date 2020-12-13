@@ -44,7 +44,7 @@
         mode: '0740'
         owner: 'www-data'
         group: 'www-data'
-    
+
     - name: remove index.html
       become: yes
       file:
@@ -53,13 +53,13 @@
 
 - name: create database
   become: yes
-  mysql_db: 
+  mysql_db:
     name: '{{ phplist_db_name }}'
     login_unix_socket: /var/run/mysqld/mysqld.sock
 
 - name: make database user have access to the database
   become: yes
-  mysql_user: 
+  mysql_user:
     priv: '{{phplist_db_name}}.*:ALL'
     name: '{{phplist_db_user}}'
     password: '{{phplist_db_password}}'

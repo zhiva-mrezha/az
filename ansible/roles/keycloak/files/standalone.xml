@@ -145,8 +145,8 @@
                       <max-pool-size>20</max-pool-size>
                     </pool>
                     <security>
-                        <user-name>{{ db_user }}</user-name>
-                        <password>{{ db_password }}</password>
+                        <user-name>{{ keycloak_db_user }}</user-name>
+                        <password>{{ keycloak_db_password }}</password>
                     </security>
                 </datasource>
                 <drivers>

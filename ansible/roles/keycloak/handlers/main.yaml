@@ -4,7 +4,7 @@
     daemon_reload: yes
     state: restarted
     name: nftables
-    enabled: yes 
+    enabled: yes
 
 - name: restart keycloak
   become: yes
@@ -12,4 +12,4 @@
     daemon_reload: yes
     state: restarted
     name: keycloak
-    enabled: yes 
+    enabled: yes
