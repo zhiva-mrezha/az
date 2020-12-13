@@ -118,4 +118,11 @@
         group: keycloak
         mode: '0744'
       notify: restart keycloak
+    - name: copy theme
+      copy:
+        src: files/zhiva.be
+        dest: '{{ keycloak_root }}/themes'
+        owner: keycloak
+        group: keycloak
+      notify: restart keycloak
   tags: service
