@@ -71,3 +71,25 @@
   template:
     src: 'files/config.php'
     dest: '{{ phplist_root }}/config/'
+
+- name: put phpList binary in place
+  become: yes
+  copy:
+    content: 'sudo -u www-data /usr/bin/php {{ phplist_root }}/admin/index.php -c {{ phplist_root }}/config/config.php $@'
+    dest: /usr/local/bin/phplist
+    mode: u+rwx,g-wx,o+x
+
+- name: make a cron job to fetch Keycloak Zhiva Mrezha user emails and put them in mailing list
+  block:
+    - name: make the script
+      become: yes
+      template:
+        src: 'files/keycloak-to-phplist.sh'
+        dest: '/usr/local/bin/keycloak-to-phplist'
+        mode: u+rwx,g+rx,o+rx
+
+    - name: make the cron job
+      cron:
+        name: "keycloak emails to phplist"
+        job: "/usr/local/bin/keycloak-to-phplist >> /home/{{ admin }}/keycloak-to-phplist.log 2>&1
+"
