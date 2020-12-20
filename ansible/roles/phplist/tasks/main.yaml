@@ -45,11 +45,11 @@
         owner: 'www-data'
         group: 'www-data'
 
-    - name: remove index.html
-      become: yes
-      file:
-        name: /opt/phplist/index.html
-        state: absent
+- name: remove index.html
+  become: yes
+  file:
+    name: /opt/phplist/index.html
+    state: absent
 
 - name: create database
   become: yes

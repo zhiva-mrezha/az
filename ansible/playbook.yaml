@@ -59,7 +59,7 @@
               # source https://www.nginx.com/resources/wiki/start/topics/recipes/phplist/
               #
               root {{ phplist_root }};
-              index index.php;
+              index index.php; # не работи, затова автоматично изтриваме index.html
               charset utf-8;
 
               location ~* \.(txt|log|inc)$ {
@@ -81,7 +81,7 @@
               location ~* (index\.php|upload\.php|connector\.php|dl\.php|ut\.php|lt\.php|download\.php)$ {
                      fastcgi_split_path_info ^(.|\.php)(/.+)$;
 
-                     include fastcgi_params; #standar fastcgi config file
+                     include fastcgi_params; #standart fastcgi config file
                      fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
                      fastcgi_intercept_errors on;
                      fastcgi_pass php-handler;
