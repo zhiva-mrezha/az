@@ -1,0 +1,21 @@
+.login-pf, .login-pf body {
+    background: white none;
+}
+
+#kc-header {
+    color: black;
+}
+
+.card-pf {
+    border-style: solid;
+    border-style-top: solid;
+    border-top-width: 1px;
+    border-width: 1px;
+    border-radius: 5px;
+}
+
+#kc-registration {
+    font-size: 24px;
+    font-weight: 300;
+    color: black;
+}
