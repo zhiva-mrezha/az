@@ -1,8 +1,8 @@
 - name: install requirements
   become: yes
   apt:
-    update_cache: yes
     name:
+      - php7.4-fpm
       - mariadb-server
       - python3-pymysql
       - php-mysqli
@@ -13,6 +13,7 @@
       - php-gd
       - php-xml-util
       - php-bcmath
+      - jq
 
 - name: check whether phpList is installed
   stat:
@@ -22,7 +23,7 @@
 - name: install phpList
   when: not phplist_root_stat.stat.exists
   vars:
-    VER: 3.5.8
+    VER: 3.5.9
   block:
     - name: fetch phpList
       get_url:
@@ -77,7 +78,7 @@
   copy:
     content: 'sudo -u www-data /usr/bin/php {{ phplist_root }}/admin/index.php -c {{ phplist_root }}/config/config.php $@'
     dest: /usr/local/bin/phplist
-    mode: u+rwx,g-wx,o+x
+    mode: u+rwx,g-w,o+rx
 
 - name: make a cron job to fetch Keycloak Zhiva Mrezha user emails and put them in mailing list
   block:

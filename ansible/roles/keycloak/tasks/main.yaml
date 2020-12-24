@@ -51,6 +51,12 @@
   become_user: postgres
   postgresql_user: db={{ keycloak_db_name }} name={{ keycloak_db_user }} password={{ keycloak_db_password }} priv=ALL
 
+- name: create keycloak user
+  become: yes
+  user:
+    name: keycloak
+    system: true
+
 - name: make directory for JDBC Postgresql driver
   become: yes
   file:
@@ -87,10 +93,6 @@
 - name: configure Keycloak as a Systemd service
   become: yes
   block:
-    - name: create keycloak user
-      user:
-        name: keycloak
-        system: true
     - name: set directory ownership
       file:
         name: '{{ keycloak_root }}'
