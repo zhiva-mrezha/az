@@ -12,3 +12,15 @@ $phpmailer_smtppassword = '{{ mail_password }}';
 define("PHPMAILERPORT",'587');
 define("PHPMAILER_SECURE",'tls');
 $language_module = 'bulgarian.inc';
+
+define('MANUALLY_PROCESS_BOUNCES', 0);
+define('MANUALLY_PROCESS_QUEUE', 0);
+
+$bounce_mailbox_host = 'pop.gmail.com';
+$bounce_mailbox_user = 'zhivamrezha';
+$bounce_mailbox_password = 'mdkjrkpxiyjzrvlq';
+$bounce_mailbox_port = "995/pop3/ssl/novalidate-cert";
+$message_envelope = "zhivamrezha+sesbounce@gmail.com";
+
+define('VERBOSE', 1);
+define('PHPMAILER_SMTP_DEBUG', 2);
